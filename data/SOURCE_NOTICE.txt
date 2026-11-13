@@ -1,0 +1,9 @@
+Steam Games factual metadata notice
+
+This package is an unofficial educational transformation of the Steam Games Dataset maintained by Martin Bustos / Fronkon Games. The source dataset is published at https://www.kaggle.com/datasets/fronkongames/steam-games-dataset and mirrored by its maintainer at https://huggingface.co/datasets/FronkonGames/steam-games-dataset. The source dataset identifies its license as MIT; the accompanying MIT text applies only to rights the licensor is entitled to grant.
+
+The transformed database deliberately includes factual metadata only. It excludes game descriptions, quoted reviews, content notes, package marketing text, support contact details, websites, header artwork, screenshots, and movies. Steam data is sourced ultimately from Valve's Steam services, and statistical estimates are sourced partly from SteamSpy. SteamSpy estimates may be incomplete, outdated, or inaccurate.
+
+Steam, the Steam logo, and individual game names and marks belong to Valve Corporation and their respective owners. No affiliation with or endorsement by Valve, Steam, SteamSpy, game developers, game publishers, Kaggle, or Hugging Face is claimed.
+
+The database and its source data are provided "as is", without warranties of accuracy, completeness, currency, merchantability, fitness for a particular purpose, title, or non-infringement. Users should verify important facts against authoritative current sources. Valve's Steam Web API Terms of Use are available at https://steamcommunity.com/dev/apiterms.

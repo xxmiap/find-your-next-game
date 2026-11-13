@@ -1,0 +1,55 @@
+{
+    "databaseVersion": "1.0.0",
+    "input": {
+        "title": "Steam Games Dataset",
+        "path": "https://www.kaggle.com/datasets/fronkongames/steam-games-dataset",
+        "version": "44",
+        "snapshotDate": "2026-08-25",
+        "mirrorPath": "https://huggingface.co/datasets/FronkonGames/steam-games-dataset/tree/20d2a30a8a381076b766e4b70cd4a16fbe2be4d8",
+        "mirrorRevision": "20d2a30a8a381076b766e4b70cd4a16fbe2be4d8",
+        "file": {
+            "path": "games.csv",
+            "bytes": 401140503,
+            "sha256": "1b48008b01a799d82385d6e66ba0cb65dd477b6aa4b6c2ec8c443025ab6880ad"
+        }
+    },
+    "generator": {
+        "name": "de-eskuel Steam Games database builder",
+        "version": "1.0.0"
+    },
+    "statistics": {
+        "inputRecords": 125855,
+        "outputRecords": 125854
+    },
+    "exclusions": [
+        {
+            "reason": "missing-name",
+            "count": 1,
+            "appIds": [
+                396420
+            ]
+        }
+    ],
+    "properties": {
+        "priceCurrency": "USD"
+    },
+    "scope": {
+        "included": "Factual game metadata",
+        "excluded": [
+            "descriptions",
+            "reviews",
+            "media",
+            "marketing text",
+            "contact details",
+            "external URLs"
+        ]
+    },
+    "transformations": [
+        "repair the version 44 merged Discount/DLC header",
+        "exclude source rows without a game name",
+        "normalize multi-valued factual attributes into related tables",
+        "preserve source release-date text and add ISO dates where parseable",
+        "split estimated-owner ranges into numeric bounds",
+        "represent absent zero review scores as null"
+    ]
+}

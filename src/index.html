@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en-US">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Find Your Next Game · U.S. Steam Explorer</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+<header class="mast"><div class="wrap mast-inner"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">↗</span><span>Find Your Next Game</span></a><span class="market">U.S. STORE <span>·</span> USD</span></div></header>
+<div class="wrap" id="top">
+<nav class="nav" aria-label="Dashboard sections"><button id="tab-sketch" aria-pressed="true" aria-controls="sketch" data-tab="sketch">Explore</button><button id="tab-channels" aria-pressed="false" aria-controls="channels" data-tab="channels">Chart guide</button><button id="tab-data" aria-pressed="false" aria-controls="data" data-tab="data">About the data</button></nav>
+<main>
+<section id="sketch" class="page" aria-labelledby="hero-title">
+  <section class="hero">
+    <div><p class="eyebrow">STEAM DISCOVERY · U.S. EDITION</p><h1 id="hero-title">Find your next game.</h1><p>Start with a game you like. See what matches your tags, platform, and budget.</p></div>
+    <div class="snapshot"><strong id="catalog-count"></strong><span>games in the catalog</span><span id="catalog-price-count" class="note"></span><small id="snapshot-date"></small></div>
+  </section>
+  <section class="panel setup-panel" aria-label="Search settings">
+    <div class="panel-head"><div><p class="eyebrow">YOUR SEARCH</p><h2>Start with a game</h2></div><button id="toggle-setup" aria-expanded="true" aria-controls="setup">Collapse setup</button></div>
+    <div id="setup">
+      <div class="setup">
+        <div class="field"><label for="seed-search">Search by game name</label><input id="seed-search" type="search" placeholder="Try Risk of Rain or Hollow Knight" autocomplete="off"><div id="seed-results" class="seed-results"></div></div>
+        <div class="field"><span class="field-label">Search tags <small id="tag-choice-count"></small></span><div id="tags" class="tags"></div><details id="recorded-tags" class="recorded-tags" open hidden><summary id="recorded-tag-title"></summary><div id="recorded-tag-options" class="recorded-tag-options"></div><p id="recorded-tag-note" class="note" aria-live="polite"></p></details><div class="row tag-picker"><label class="sr-only" for="add-tag">Tag to add</label><select id="add-tag"></select><button id="add-tag-button">Add tag</button></div><p id="seed-note" class="note"></p></div>
+        <div class="field constraints"><div><label for="budget">Budget cap (USD)</label><select id="budget"></select></div><div><label for="os">Platform</label><select id="os"><option value="windows">Windows</option><option value="mac">macOS</option><option value="linux">Linux</option><option value="any">Any platform</option></select></div><p class="note">A budget cap uses recorded U.S. prices from the snapshot.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="active" aria-label="Current results and comparison">
+    <div class="row between"><div><div id="status" class="stats" aria-live="polite"></div><div id="comparison" class="note"></div><div id="review-coverage" class="note"></div></div><div class="row actions"><button id="relax" class="primary">Make a tag optional</button><button id="clear">Clear selection</button><button id="undo">Undo filter</button><button id="reset">Reset</button><button id="restore-color" hidden>Exit grayscale preview</button></div></div>
+    <div class="row compare-controls"><label for="compare-mode">Compare with</label><select id="compare-mode"><option value="previous">Previous filters</option><option value="pinned">Saved baseline</option></select><button id="pin">Save current baseline</button><span id="condition-label"></span></div>
+  </section>
+  <div class="charts">
+    <section class="panel chart-card" id="panel-a"><div class="panel-head"><div><p class="eyebrow">01 / MATCH</p><h2>Shared tags</h2><p class="note">Check a row to include it. Click a row to highlight its games.</p></div><button class="expand" data-expand="a" aria-label="Expand shared tags">Expand <span aria-hidden="true">↗</span></button></div><div id="view-a" class="chart-body"></div></section>
+    <section class="panel chart-card" id="panel-b"><div class="panel-head"><div><p class="eyebrow">02 / COMPARE</p><h2>Reviews</h2><p class="note">Use points for individual games or density for crowded areas.</p></div><button class="expand" data-expand="b" aria-label="Expand reviews">Expand <span aria-hidden="true">↗</span></button></div><div id="view-b" class="chart-body"></div></section>
+    <section class="panel chart-card" id="panel-c"><div class="panel-head"><div><p class="eyebrow">03 / BUDGET</p><h2>Prices in USD</h2><p class="note">See what's within reach. Click a band to select its eligible games.</p></div><button class="expand" data-expand="c" aria-label="Expand prices">Expand <span aria-hidden="true">↗</span></button></div><div id="view-c" class="chart-body"></div></section>
+  </div>
+  <div class="below">
+    <section class="panel"><div class="panel-head"><div><p class="eyebrow">YOUR RESULTS</p><h2>Candidate games <span id="list-count" class="pill"></span></h2><p class="note" id="list-context"></p></div><label class="sort-label">Sort by <select id="sort"><option value="reviews">Most reviews</option><option value="rating">Highest positive rate</option><option value="price">Lowest USD price</option><option value="name">Title A–Z</option></select></label></div><div id="candidate-list" class="table-wrap"></div><div class="row between pager"><button id="prev-page">Previous</button><span id="page-status" role="status"></span><button id="next-page">Next</button></div></section>
+    <aside class="panel shortlist-panel"><p class="eyebrow">SAVE FOR LATER</p><h2>Shortlist <span id="short-count" class="pill">0</span></h2><div id="shortlist" class="shortlist-list"></div><div class="row"><button id="compare-shortlist">Compare</button><button id="export-shortlist">Export CSV</button></div></aside>
+  </div>
+</section>
+<section id="channels" class="page prose" aria-labelledby="channels-title" hidden>
+  <div class="page-heading"><p class="eyebrow">INFORMATION VISUALIZATION</p><h1 id="channels-title">How to read the charts</h1><p>The three views help you find matches, compare review evidence, and see what changes with a different budget.</p></div>
+  <div class="panel table-wrap" id="channel-table"></div>
+  <div class="panel guide"><h2>What changes when you click?</h2><p><b>Filters</b> set which games qualify. <b>Highlights</b> connect the same games across charts and narrow the list. <b>NEW</b> marks games that entered the result set relative to the chosen baseline.</p><p>With up to three search tags, each game fits just one tag row. Prices use ordered bands, and bar length counts games. On the scatterplot, vertical position shows positive rate and horizontal position shows review count on a log scale; shape identifies newly included games. In Density mode, each cell counts the games in that range. Darker cells hold more games; an outline indicates a selection. Hover a cell to see its counts, or click it to select its games.</p></div>
+  <div class="panel guide"><h2>Check the charts without color</h2><p>Preview the charts in grayscale to see whether shapes, labels, and contrast still communicate the selection and the comparison.</p><button id="gray" aria-pressed="false">Preview charts in grayscale</button></div>
+</section>
+<section id="data" class="page prose" aria-labelledby="data-title" hidden>
+  <div class="page-heading"><p class="eyebrow">CATALOG & COVERAGE</p><h1 id="data-title">About the data</h1><p id="provenance-lead"></p></div>
+  <div class="panel" id="data-summary"></div>
+  <div class="panel guide"><h2>What the numbers mean</h2><ul><li>Prices are recorded in U.S. dollars as observed in the source snapshot and may reflect discounts at that time. Check Steam for today's offer.</li><li>The source does not distinguish free games from missing storefront prices at $0. Those entries show <b>Unverified</b>. They are searchable and can appear under <b>No cap</b>; they are excluded from specific dollar caps.</li><li>Matching uses recorded tags. Games with no recorded tags are still searchable; choosing manual tags lets you explore when a starting game lacks tag data.</li><li>Positive rate is positive reviews divided by total reviews. A game with zero reviews stays in the candidate list but has no rate to plot. Platform flags describe recorded support; check Steam for system requirements.</li><li>Owner ranges are SteamSpy estimates. Segments encode the order of the ranges; Details shows the source estimate.</li></ul></div>
+  <div class="panel guide">
+    <h2>Sources</h2>
+    <ul>
+      <li>Package used for this dashboard — <a href="https://eskuel.de/en/databases/steam-games/" target="_blank" rel="noopener">Eskuel Steam Games 1.0.0 (SQLite)</a></li>
+      <li>Upstream dataset — <a href="https://www.kaggle.com/datasets/fronkongames/steam-games-dataset/versions/44" target="_blank" rel="noopener">Fronkon Games Steam Games Dataset v44 on Kaggle</a></li>
+      <li>Upstream mirror — <a href="https://huggingface.co/datasets/FronkonGames/steam-games-dataset" target="_blank" rel="noopener">Fronkon Games Steam Games Dataset on Hugging Face</a></li>
+      <li><a href="https://github.com/FronkonGames/Steam-Games-Scraper/blob/main/SteamGamesScraper.py" target="_blank" rel="noopener">Upstream collection code</a></li>
+    </ul>
+    <p class="note">Information Visualization course project by Xiao Xiao. AI consultation and code drafting: Codex; earlier design consultation: Claude.</p>
+  </div>
+</section>
+</main>
+<footer class="foot"><span>Find Your Next Game · Xiao Xiao</span><span>U.S. dollar prices · fixed catalog snapshot</span></footer>
+</div>
+<dialog id="modal" aria-labelledby="modal-title"><div class="dialog-head"><div><p id="modal-kicker" class="eyebrow"></p><h2 id="modal-title"></h2></div><button id="close-modal">Close ×</button></div><div id="modal-body"></div></dialog>
+<div id="tooltip" class="tip" role="tooltip" hidden></div>
+<script src="vendor/d3.v7.min.js"></script><script src="../data/catalog.js"></script><script src="core.js"></script><script src="app.js"></script>
+</body></html>

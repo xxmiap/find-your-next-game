@@ -1,0 +1,18 @@
+Find Your Next Game · 美区版课堂演示更新
+
+原 proposal 不改。讲到数据来源时，补一句：
+“The proposal used a 2019 Steam snapshot. For this prototype, I switched to a newer dataset with U.S. dollar prices so players can search using a budget they’re familiar with.”
+
+新数字：2026-08-25 快照，125,854 款游戏，99,194 款有可用于预算筛选的美元价格。
+注意屏幕上的金额是快照价格，可能包含当时的折扣。
+
+操作：
+1. Reset，展示 Risk of Rain (2013) + macOS + Up to $15。三个标签都要求时，57 个候选。
+2. 点击 Make Platformer optional。看到 57 → 581、+524 NEW。
+3. 点击 Shared tags 中的 ● ● ○ 行本身，不要点复选框。候选还是 581，选中 524。
+4. 指着 Reviews 和 Prices in USD 里的深蓝标记，说它们是同一批游戏。悬停看美元价格和评论数。
+5. 点击 Reviews 的 Density：候选数量不变，深色格子表示游戏更多。悬停看总数和 NEW，点击一格可联动选中格内游戏。
+6. 点击 Expand 看更大的图；用 Points 切回单个游戏。Clear selection 回到全部候选。
+
+如果被问到为什么没有 Free only：数据里的零价无法区分免费与缺失，
+因此页面标成 Unverified，不把这些游戏当作 $0 加入预算结果。

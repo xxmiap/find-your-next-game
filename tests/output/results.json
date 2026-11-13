@@ -1,0 +1,21 @@
+{
+  "passed": [
+    "Complete catalog, USD price caps, and three offline charts",
+    "Optional Platformer and shared-tag selection",
+    "Clear, previous filters, and pinned baseline",
+    "Dollar-band selection updates tag counts and list",
+    "Review brush and zero-review exclusion",
+    "Live review hover shows U.S. dollars",
+    "Details, compare, export and snapshot metadata",
+    "Game details distinguish three exact matches from a partial match",
+    "Real search and source tags refresh",
+    "Starting-game tag bank exposes all recorded tags and lets users swap a suggestion",
+    "Density preserves candidates; larger chart hover and cell selection link to the list",
+    "Unverified prices are excluded under a dollar cap",
+    "Expanded budget control updates the same filters",
+    "Responsive layout and USD source documentation",
+    "No runtime errors or automatic network calls"
+  ],
+  "errors": [],
+  "loadMs": 2418
+}
