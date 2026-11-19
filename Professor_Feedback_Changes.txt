@@ -1,0 +1,36 @@
+Find Your Next Game
+Professor feedback received after the working prototype
+
+1. Search/setup displaced the analytical charts.
+   Setup now starts collapsed for the preset and collapses after a game is
+   chosen. Its summary retains the game, tags, requirements, budget and
+   platform. Edit search restores the full controls. Missing-tag games keep
+   setup open. The review panel is wider and its plot is taller.
+
+2. Peers needed a hosted version.
+   GitHub Pages serves the dashboard at
+   https://xxmiap.github.io/find-your-next-game/
+   The source repository retains the bundled offline version.
+
+3. Review marks needed stronger differentiation and names.
+   Retained candidates use filled circles; NEW uses hollow diamonds.
+   Selected candidates preserve their circle/diamond identity and gain a
+   stronger fill and contrasting ring. Direct labels identify up to three
+   most-reviewed candidates, or the most-reviewed games within a selection.
+   This is a review-volume criterion. Labeling a few records limits clutter.
+
+4. Empty price bands used space.
+   Only populated bands are rendered, in their original order. A note
+   reports how many empty bands are omitted. Counts and selections still
+   use the full underlying price groups.
+
+5. The recorded walkthrough needed a clearer search and cleaner ending.
+   Final_Walkthrough_EN.txt provides one scripted path and recording cues.
+   Recording the replacement narration remains the student's next step.
+
+Verified demo numbers for the pinned catalog are 57 -> 581, with 524 NEW.
+The professor's feedback quoted 57 -> 81. The recorded data and SQL
+reference checks support 581.
+
+This records professor feedback. Formal two-peer usability testing and its
+observations will be documented separately when conducted.

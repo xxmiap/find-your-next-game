@@ -24,3 +24,59 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .tag.tag-match{background:var(--blue);border-color:var(--blue);color:white}
 .detail-tag-missing{margin-top:7px}
 @media(forced-colors:active){select,.active select{appearance:auto;background-image:none;padding-inline:8px}}
+
+/* Professor feedback: put the analysis on the first screen. */
+.hero {
+  padding: 12px 18px;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: clamp(1.7rem, 2.5vw, 2.2rem);
+  margin-bottom: 5px;
+}
+.setup-panel { padding-block: 12px; }
+.setup-panel .panel-head { margin-bottom: 8px; }
+.mast-inner { min-height: 48px; }
+.nav { margin-block: 9px; }
+.hero .eyebrow { margin-bottom: 4px; }
+.snapshot strong { font-size: 1.65rem; }
+.active { margin-block: 12px; padding-block: 12px; }
+.active #comparison, .active #review-coverage { display: inline-block; margin-right: 12px; }
+.search-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.summary-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.summary-tag { font-size: .83rem; }
+.summary-tag small { margin-left: 5px; font-weight: 500; }
+.summary-constraints { font-size: .87rem; color: var(--muted); }
+.charts { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1fr); }
+.matrix-btn { padding-block: 7px; }
+.price-row { min-height: 36px; }
+
+/* Shape shows baseline membership. A ring and stronger fill show selection. */
+:root { --point: #547183; }
+.review-legend { gap: 7px 14px; }
+.review-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.mark-key { display: inline-block; width: 10px; height: 10px; flex: none; }
+.retained-key { background: var(--point); border: 1px solid var(--point-outline); border-radius: 50%; }
+.new-key { background: white; border: 2px solid var(--blue); transform: rotate(45deg); margin-inline: 2px; }
+.selected-key { border-radius: 50%; background: var(--blue); border: 2px solid #102b3b; box-shadow: 0 0 0 2px white; }
+.chart-svg .candidate-label { font-size: 12px; font-weight: 650; fill: var(--ink); }
+.chart-svg .label-leader { stroke: var(--point-outline); stroke-width: 1; }
+.label-background { fill: white; fill-opacity: .94; }
+.review-label-note { margin-top: 5px; }
+
+@media (max-width: 1120px) and (min-width: 701px) {
+  .charts { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); }
+  .chart-card:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 700px) {
+  .charts { grid-template-columns: minmax(0, 1fr); }
+  .chart-card:last-child { grid-column: auto; }
+  .hero { padding: 14px; }
+}

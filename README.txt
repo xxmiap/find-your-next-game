@@ -35,6 +35,8 @@ one nameless app upstream. This dashboard drops no rows from the pinned package.
 Source notices, licensing, checksums and preparation details are in data/.
 
 HOW TO DEMO
+The online version is https://xxmiap.github.io/find-your-next-game/
+Setup starts collapsed. Edit search reveals the full game and tag picker.
 1. Reset to Risk of Rain (2013), Rogue-like + Indie + Platformer, macOS, $15.
 2. Show 57 candidates. Click Make Platformer optional: 581 total, +524 NEW.
 3. Click the Rogue-like + Indie row itself (not its checkbox). All three charts
@@ -50,13 +52,17 @@ HOW TO DEMO
 VISUAL ENCODINGS AND IMPLEMENTATION
 A: exact tag membership (fill) and game counts (common-scale bar length).
 B: positive rate (linear vertical position), review count (log horizontal
-position), NEW (diamond), selection (blue fill). Density mode groups points
+position), NEW (hollow diamond), retained (filled circle), selection (blue
+fill, white halo, and dark outline, preserving the original shape). Direct
+labels identify up to three review-volume leaders in the active candidate
+or selected set. Density mode groups points
 into a fixed 20 × 10 grid; fill lightness encodes the number of games in each
 cell and an outline marks cells that contain selected games. Hover reports the
 cell totals, including NEW, and selecting a cell preserves the candidate set.
 D3 provides scales and brush.
 C: ordered price bands in USD, horizontal bars for game counts and blue for
-selected counts. Unverified is separated from the ordered price bands.
+selected counts. Empty bands are omitted and the number omitted is displayed.
+Unverified is separated from the ordered price bands.
 Game details highlight current search-tag matches first, with a match count;
 search tags not recorded for that game are listed separately.
 The tag panel shows all recorded tags for the starting game. Suggested tags

@@ -50,11 +50,21 @@ function selectSeed(g){
     state.rows=state.tags.length?[(1<<state.tags.length)-1]:[];
   },true);
   $('seed-search').value=g.name; renderSeeds();
+  setSetupExpanded(!g.tags.length);
+  if(g.tags.length)$('toggle-setup').focus({preventScroll:true});
 }
 function reset(){
   state=defaultState();reviewMode='points';cached=null;previous=null;pinned=null;history=[];clearSelection();
   $('compare-mode').value='previous';$('seed-search').value=byId.get(demo.seed).name;
-  render();renderSeeds();
+  render();renderSeeds();setSetupExpanded(false);
+}
+// Keep the chosen game and tag requirements visible while freeing room for analysis.
+function setSetupExpanded(open){
+  $('setup').hidden=!open;
+  $('search-summary').hidden=open;
+  $('toggle-setup').setAttribute('aria-expanded',String(open));
+  $('toggle-setup').textContent=open?'Collapse setup':'Edit search';
+  $('search-heading').textContent=open?'Start with a game':(byId.get(state.seed)?.name||'Your tag search');
 }
 function renderSeeds(){
   const query=$('seed-search').value.trim(),{matches,total}=GameCore.search(games,query);
@@ -62,9 +72,12 @@ function renderSeeds(){
   const note=!query?'Enter a title or a Steam app ID.':!total?'No matches in this snapshot. Try another title or choose tags manually.':total>20?`Showing 20 of ${count(total)} matches.`:`${count(total)} ${total===1?'match':'matches'}`;
   $('seed-results').innerHTML=`<div class="seed-options">${buttons}</div><div class="row seed-meta"><small>${note}</small><button id="manual-tags" class="text-btn">Choose tags manually</button></div>`;
   $('seed-results').querySelectorAll('[data-seed]').forEach(b=>b.onclick=()=>selectSeed(byId.get(b.dataset.seed)));
-  $('manual-tags').onclick=()=>{changeFilter(()=>{state.seed=null;state.tags=[];state.rows=[];state.tagOrigin='Your choices'},true);$('seed-search').value='';renderSeeds();$('add-tag').focus()};
+  $('manual-tags').onclick=()=>{changeFilter(()=>{state.seed=null;state.tags=[];state.rows=[];state.tagOrigin='Your choices'},true);$('seed-search').value='';renderSeeds();setSetupExpanded(true);$('add-tag').focus()};
 }
 function renderSetup(){
+  const requirement=tagIndex=>state.rows.length&&state.rows.every(mask=>mask&(1<<tagIndex))?'required':'optional';
+  $('search-summary').innerHTML=`<div class="summary-tags" aria-label="Current search tags">${state.tags.map((tag,i)=>`<span class="tag summary-tag">${esc(tag)} <small>${requirement(i)}</small></span>`).join('')||'<span class="note">Choose up to three tags.</span>'}</div><span class="summary-constraints">${state.budget===null?'No budget cap':`Up to ${capText(state.budget)}`} · ${platformName[state.os]}</span>`;
+  if($('setup').hidden)$('search-heading').textContent=byId.get(state.seed)?.name||'Your tag search';
   $('budget').value=budgetValue();$('os').value=state.os;
   $('tags').innerHTML=state.tags.map(t=>`<button class="tag" data-remove="${esc(t)}" aria-label="Remove ${esc(t)} from the search">${esc(t)} <span aria-hidden="true">×</span></button>`).join('')||'<span class="note">Choose up to three tags.</span>';
   $('tag-choice-count').textContent=`${state.tagOrigin} · ${state.tags.length}/3`;
@@ -169,14 +182,14 @@ function reviewGrid(plotted,x,y){
 function renderB(el) {
   const gs=candidates(),plotted=gs.filter(hasReviewRate),dense=reviewMode==='density';
   const w=Math.max(200,Math.floor(el.getBoundingClientRect().width));
-  const h=el.id==='expanded-chart'?Math.max(260,Math.min(640,Math.round(innerHeight*.57))):300;
+  const h=el.id==='expanded-chart'?Math.max(340,Math.min(700,Math.round(innerHeight*.65))):Math.max(340,Math.min(400,Math.round(innerHeight*.43)));
   const l=48,r=14,t=30,b=50;
   const x=d3.scaleLog().domain([1,10**maxPower]).range([l+6,w-r-6]);
   const y=d3.scaleLinear().domain([0,100]).range([h-b-6,t+6]);
   const grid=dense?reviewGrid(plotted,x,y):null;
   const peak=grid?d3.max(grid.cells,c=>c.games.length)||0:0;
   const densityLegend=peak?`<div class="legend"><span>Games per cell</span><span class="density-ramp" aria-hidden="true"></span><span>${peak===1?'1':`1–${count(peak)}`}</span>${selection!==null?'<span><i class="outline-key"></i> Contains selected games</span>':''}</div>`:'';
-  const pointLegend='<div class="legend"><span>● Retained / current</span><span>◆ NEW vs chosen baseline</span><span><i class="swatch"></i> Selected</span></div>';
+  const pointLegend='<div class="legend review-legend"><span><i class="mark-key retained-key"></i> Retained / current</span><span><i class="mark-key new-key"></i> NEW vs chosen baseline</span><span><i class="mark-key selected-key"></i> Selected (circle or diamond)</span></div>';
   el.innerHTML=`<div class="review-controls"><div class="review-mode" role="group" aria-label="Review chart display"><button type="button" data-review-mode="points" aria-pressed="${!dense}">Points</button><button type="button" data-review-mode="density" aria-pressed="${dense}">Density</button></div><p class="note">${dense?'Darker cells contain more games. Click or drag across cells to select.':'Hover for details, click to open a game, or drag to select.'}</p></div><div class="plot-wrap" style="height:${h}px"><canvas aria-hidden="true"></canvas><svg class="chart-svg" width="${w}" height="${h}" role="img" aria-label="Review ${dense?'density grid':'scatterplot'}; ${plotted.length} games. Drag to select; game names and exact values are available in the table."></svg></div>${dense?densityLegend:pointLegend}<p class="note">${count(plotted.length)} of ${count(gs.length)} plotted · ${count(gs.length-plotted.length)} without a defined review rate. Games without reviews still appear in the list.</p>`;
   el.querySelectorAll('[data-review-mode]').forEach(button=>button.onclick=()=>{
     if(reviewMode===button.dataset.reviewMode)return;
@@ -201,11 +214,19 @@ function renderB(el) {
     }
   }else for(const g of [...plotted.filter(g=>!selected(g)),...plotted.filter(selected)]) {
     const cx=x(g.reviews),cy=y(g.rate),isNew=fresh(g);
-    ctx.fillStyle=selected(g)?ink.selected:selection===null?ink.normal:ink.muted;
-    ctx.strokeStyle=ink.outline;ctx.lineWidth=.4;ctx.beginPath();
-    if(isNew){const a=4.4;ctx.moveTo(cx,cy-a);ctx.lineTo(cx+a,cy);ctx.lineTo(cx,cy+a);ctx.lineTo(cx-a,cy);ctx.closePath()}
-    else ctx.arc(cx,cy,3.5,0,Math.PI*2);
-    ctx.fill();ctx.stroke();
+    const focused=selected(g),context=selection!==null&&!focused;
+    const radius=focused?5:4;
+    // NEW remains a diamond when selected. A filled accent and outer ring add
+    // selection without replacing the baseline membership shape.
+    ctx.globalAlpha=context ? 0.38 : 1;
+    ctx.fillStyle=focused?ink.selected:isNew?'#ffffff':ink.normal;
+    ctx.strokeStyle=focused?'#102b3b':isNew?ink.selected:ink.outline;
+    ctx.lineWidth=focused?1.8:isNew?1.7:.7;
+    ctx.beginPath();
+    if(isNew){const a=radius*1.25;ctx.moveTo(cx,cy-a);ctx.lineTo(cx+a,cy);ctx.lineTo(cx,cy+a);ctx.lineTo(cx-a,cy);ctx.closePath()}
+    else ctx.arc(cx,cy,radius,0,Math.PI*2);
+    if(focused){ctx.save();ctx.strokeStyle='#ffffff';ctx.lineWidth=5;ctx.stroke();ctx.restore()}
+    ctx.fill();ctx.stroke();ctx.globalAlpha=1;
   }
   const svg=d3.select(el.querySelector('svg'));
   svg.append('rect').attr('x',l).attr('y',t).attr('width',w-l-r).attr('height',h-t-b).attr('fill','none').attr('stroke','#c5cfd4');
@@ -214,6 +235,7 @@ function renderB(el) {
   svg.append('g').attr('transform',`translate(${l},0)`).call(d3.axisLeft(y).tickValues([0,25,50,75,100]).tickSizeOuter(0));
   svg.append('text').attr('x',l).attr('y',15).text('Positive review rate (%)');
   svg.append('text').attr('x',l+(w-l-r)/2).attr('y',h-8).attr('text-anchor','middle').text('Total reviews · log₁₀ scale');
+  if(!dense)labelReviewCandidates(svg,plotted,x,y,w,h,l,r,t,b,el);
   const tree=dense?null:d3.quadtree().x(g=>x(g.reviews)).y(g=>y(g.rate)).addAll(plotted);
   const cellDomain=([[x0,y0],[x1,y1]])=>[[x.invert(x0),y.invert(y1)],[x.invert(x1),y.invert(y0)]];
   let brushing=false;
@@ -248,13 +270,46 @@ function renderB(el) {
   }).on('pointerleave.tooltip',()=>{$('tooltip').hidden=true});
 }
 
+// Label review-volume leaders, using the selected group when one exists.
+// These are evidence-volume labels rather than a recommendation score.
+function labelReviewCandidates(svg,plotted,x,y,w,h,l,r,t,b,el){
+  const leaders=plotted.filter(g=>selection===null||selected(g))
+    .sort((a,b)=>b.reviews-a.reviews||a.id.localeCompare(b.id)).slice(0,w<420?2:3);
+  if(!leaders.length)return;
+  const annotations=svg.append('g').attr('class','review-labels').attr('pointer-events','none');
+  const maxChars=w<420?18:25;
+  const placements=[];
+  for(const game of leaders){
+    const name=game.name.length>maxChars?game.name.slice(0,maxChars-1)+'…':game.name;
+    const label=annotations.append('g').attr('data-label-game',game.id);
+    label.append('title').text(`${game.name} · ${count(game.reviews)} reviews · ${rateText(game.rate)}`);
+    const text=label.append('text').attr('class','candidate-label').text(name);
+    const textWidth=text.node().getComputedTextLength();
+    const px=x(game.reviews),py=y(game.rate);
+    const lx=Math.max(l+5,Math.min(px+11,w-r-textWidth-5));
+    let ly=Math.max(t+18,Math.min(py-12,h-b-10));
+    while(placements.some(other=>Math.abs(ly-other.y)<23&&lx<other.x+other.width+8&&lx+textWidth+8>other.x))ly+=23;
+    if(ly>h-b-10)ly=t+18;
+    placements.push({x:lx,y:ly,width:textWidth});
+    label.insert('line','text').attr('x1',px).attr('y1',py).attr('x2',lx).attr('y2',ly-4).attr('class','label-leader');
+    label.insert('rect','text').attr('x',lx-4).attr('y',ly-13).attr('width',textWidth+8).attr('height',18).attr('rx',3).attr('class','label-background');
+    text.attr('x',lx).attr('y',ly);
+  }
+  const note=document.createElement('p');
+  note.className='note review-label-note';
+  note.textContent=`Labels show the ${leaders.length} most-reviewed ${selection===null?'candidates':'selected games'}.`;
+  el.append(note);
+}
+
 function renderC(el){
   const groups=derived().priceGroups,max=Math.max(1,...groups.map(gs=>gs.length));
-  el.innerHTML=`<div class="price-list">${groups.map((gs,i)=>{
+  const populated=groups.map((gs,i)=>({gs,i})).filter(({gs})=>gs.length);
+  const hiddenBands=groups.length-populated.length;
+  el.innerHTML=`<div class="price-list">${populated.map(({gs,i})=>{
     const eligible=gs.filter(g=>inBudget(g.price,state.budget)),s=eligible.filter(selected).length;
     const note=i===labels.length-1?'No confirmed price in this snapshot':`${count(gs.length)} games · ${count(eligible.length)} within budget · ${count(s)} selected`;
     return `<button class="price-row" data-band="${i}" ${eligible.length?'':'disabled'} data-tip="${esc(note)}"><span>${labels[i]}</span>${bars(gs.length,s,max,eligible.length?'':'context')}<span class="num">${numeric(gs.length,s)}</span></button>`;
-  }).join('')}</div><div class="chart-scale"><span>0</span><span>Games</span><span>${count(max)}</span></div><div class="legend"><span><i class="swatch"></i> Selected</span><span><i class="swatch pale"></i> Eligible</span><span><i class="swatch neutral"></i> Outside cap</span></div><div class="row band-budget"><label for="budget-${el.id}">Budget cap</label><select id="budget-${el.id}" data-inline-budget>${budgetOptions()}</select></div><p class="note">Counts show matching tags and platform before the budget cap.${state.budget!==null&&groups.at(-1).length?` ${count(groups.at(-1).length)} games have an unverified price and are excluded from this budget.`:''}</p>`;
+  }).join('')||'<p class="empty">No games match the current tags and platform.</p>'}</div><div class="chart-scale"><span>0</span><span>Games</span><span>${count(max)}</span></div><div class="legend"><span><i class="swatch"></i> Selected</span><span><i class="swatch pale"></i> Eligible</span><span><i class="swatch neutral"></i> Outside cap</span></div><div class="row band-budget"><label for="budget-${el.id}">Budget cap</label><select id="budget-${el.id}" data-inline-budget>${budgetOptions()}</select></div><p class="note">Counts show matching tags and platform before the budget cap.${hiddenBands?` ${hiddenBands} empty ${hiddenBands===1?'band is':'bands are'} hidden.`:''}${state.budget!==null&&groups.at(-1).length?` ${count(groups.at(-1).length)} games have an unverified price and are excluded from this budget.`:''}</p>`;
   const cap=el.querySelector('[data-inline-budget]');cap.value=budgetValue();cap.onchange=e=>changeFilter(()=>state.budget=readBudget(e.target.value));
   el.querySelectorAll('[data-band]').forEach(n=>n.onclick=()=>setSelection(groups[+n.dataset.band].filter(g=>inBudget(g.price,state.budget))));tips(el);
 }
@@ -334,9 +389,9 @@ const channels=[
   ['Review count','Quantitative count','Point','Horizontal log position','Effectiveness','Reveals orders of magnitude; games with zero reviews have no plotted point.'],
   ['Positive review rate','Quantitative proportion','Point','Vertical linear position','Effectiveness','A common 0–100% scale supports direct comparisons of positive share.'],
   ['Games per review cell','Quantitative count','Equal-area grid cell','Sequential lightness; shared review axes','Expressiveness','Density counts every plotted game once. An outline identifies cells with selected games; hover provides exact counts, including NEW.'],
-  ['U.S. price bands','Ordinal categories from USD amounts','Bar row','Ordered vertical position','Expressiveness','Ascending bands support budget exploration. Unverified prices are separated from the ordered bands.'],
+  ['U.S. price bands','Ordinal categories from USD amounts','Bar row','Ordered vertical position','Expressiveness','Ascending bands support budget exploration. Empty bands are hidden and labeled as such; Unverified remains separate.'],
   ['Owner estimate group','Ordinal estimate group','Segment meter','Ordered number of filled segments','Expressiveness','Segments encode rank, and Details exposes the original estimate range.'],
-  ['NEW / retained; selected / unselected','Derived comparison and selection states','Points, bars, labels','Shape, fill, and text','Redundant cues','A diamond identifies a newly included game; consistent selection cues and counts connect games across views.']
+  ['NEW / retained; selected / unselected','Derived comparison and selection states','Points, bars, labels','Shape, fill, outline, and text','Redundant cues','Hollow diamonds identify newly included games; filled circles identify retained games. Selected points keep their shape and gain blue fill and a contrasting ring. Names label the most-reviewed candidates.']
 ];
 $('channel-table').innerHTML=`<table><thead><tr>${['Data Variable','Data Type','Mark','Channel','Principle','Justification'].map(h=>`<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${channels.map(row=>`<tr>${row.map(v=>`<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 $('catalog-count').textContent=count(meta.games);
@@ -372,9 +427,7 @@ $('export-shortlist').onclick=()=>{
   const url=URL.createObjectURL(new Blob(['\ufeff'+records.map(row=>row.map(quote).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}));
   const a=document.createElement('a');a.href=url;a.download='steam-shortlist-usd.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
-$('toggle-setup').onclick=()=>{
-  const hidden=$('setup').hidden=!$('setup').hidden;$('toggle-setup').setAttribute('aria-expanded',!hidden);$('toggle-setup').textContent=hidden?'Expand setup':'Collapse setup';
-};
+$('toggle-setup').onclick=()=>{setSetupExpanded($('setup').hidden);renderCharts()};
 function setGrayscale(on){
   document.body.classList.toggle('gray',on);
   $('gray').setAttribute('aria-pressed',on);

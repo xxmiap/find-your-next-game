@@ -13,6 +13,7 @@ const root=path.resolve(__dirname,'..');
     const check=async(name,fn)=>{await fn();passed.push(name);console.log('PASS',name)};
     const countIn=async id=>Number((await page.locator(id).innerText()).replace(/,/g,'').match(/\d+/)?.[0]);
     const readStatus=()=>page.locator('#status').innerText();
+    const editSearch=async()=>{if(await page.locator('#setup').isHidden())await page.locator('#toggle-setup').click()};
     const start=Date.now();await page.goto(pathToFileURL(path.join(root,'dist/index.html')).href);await page.locator('#candidate-list tbody tr').first().waitFor();const loadMs=Date.now()-start;
     await check('Complete catalog, USD price caps, and three offline charts',async()=>{
       assert.equal(await page.evaluate(()=>STEAM_SNAPSHOT.catalog.rows.length),125854);
@@ -21,6 +22,34 @@ const root=path.resolve(__dirname,'..');
       assert.equal(await page.locator('.chart-card:visible').count(),3);
       assert.match(await page.locator('#candidate-list tbody td:nth-child(3)').first().innerText(),/^\$/);
       assert.ok(!/£|\bGBP\b/.test(await page.locator('body').innerText()));
+    });
+    await check('Compact search keeps analysis visible and labels review-volume leaders',async()=>{
+      assert.ok(await page.locator('#setup').isHidden());
+      assert.match(await page.locator('#search-summary').innerText(),/Rogue-like.*required/s);
+      await page.setViewportSize({width:1512,height:982});
+      await page.waitForTimeout(160);
+      const chart=await page.locator('#panel-b').boundingBox();
+      assert.ok(chart.y<491,JSON.stringify(chart));
+      const annotated=await page.locator('#view-b [data-label-game]').evaluateAll(nodes=>nodes.map(n=>n.dataset.labelGame));
+      const expected=await page.evaluate(()=>candidates().filter(hasReviewRate).sort((a,b)=>b.reviews-a.reviews||a.id.localeCompare(b.id)).slice(0,3).map(g=>g.id));
+      assert.deepEqual(annotated,expected);
+      assert.match(await page.locator('#view-b .review-label-note').innerText(),/most-reviewed candidates/);
+      const renderedBands=await page.locator('#view-c [data-band]').evaluateAll(nodes=>nodes.map(n=>+n.dataset.band));
+      const populated=await page.evaluate(()=>derived().priceGroups.flatMap((group,i)=>group.length?[i]:[]));
+      assert.deepEqual(renderedBands,populated);
+      assert.match(await page.locator('#view-c').innerText(),/empty bands are hidden/);
+      await editSearch();
+      await page.locator('[data-seed="248820"]').click();
+      assert.ok(await page.locator('#setup').isHidden());
+      assert.match(await page.locator('#search-summary').innerText(),/Action Roguelike/);
+      await page.locator('#reset').click();
+      await editSearch();
+      await page.locator('#manual-tags').click();
+      assert.ok(await page.locator('#setup').isVisible());
+      assert.equal(await page.locator('#view-c [data-band]').count(),0);
+      assert.match(await page.locator('#view-c').innerText(),/No games match/);
+      await page.locator('#reset').click();
+      await page.setViewportSize({width:1440,height:1370});
     });
     await check('Optional Platformer and shared-tag selection',async()=>{
       await page.locator('#relax').click();assert.match(await page.locator('#comparison').innerText(),/57 before → 581 now · \+524 NEW/);
@@ -31,7 +60,7 @@ const root=path.resolve(__dirname,'..');
     await check('Clear, previous filters, and pinned baseline',async()=>{
       await page.locator('#clear').click();assert.equal(await countIn('#list-count'),581);
       await page.locator('#undo').click();assert.equal(await countIn('#list-count'),57);
-      await page.locator('#pin').click();await page.locator('#budget').selectOption('3000');assert.match(await page.locator('#comparison').innerText(),/^57 before/);
+      await page.locator('#pin').click();await editSearch();await page.locator('#budget').selectOption('3000');assert.match(await page.locator('#comparison').innerText(),/^57 before/);
       await page.locator('#reset').click();
     });
     await check('Dollar-band selection updates tag counts and list',async()=>{
@@ -40,14 +69,14 @@ const root=path.resolve(__dirname,'..');
     });
     await check('Review brush and zero-review exclusion',async()=>{
       const svg=page.locator('#view-b svg');await svg.scrollIntoViewIfNeeded();const b=await svg.boundingBox();
-      await page.mouse.move(b.x+49,b.y+31);await page.mouse.down();await page.mouse.move(b.x+b.width-15,b.y+249,{steps:10});await page.mouse.up();
+      await page.mouse.move(b.x+49,b.y+31);await page.mouse.down();await page.mouse.move(b.x+b.width-15,b.y+b.height-51,{steps:10});await page.mouse.up();
       const n=await page.evaluate(()=>candidates().filter(g=>g.reviews>0).length);assert.equal(await countIn('#list-count'),n);assert.ok(await page.locator('#view-b .brush .selection').isVisible());
     });
     await check('Live review hover shows U.S. dollars',async()=>{
       await page.locator('#clear').click();const svg=page.locator('#view-b svg');const b=await svg.boundingBox();
       const point=await page.evaluate(()=>{
-        const g=candidates().find(g=>g.reviews>0),w=+document.querySelector('#view-b svg').getAttribute('width');
-        return [54+Math.log10(g.reviews)/maxPower*(w-74),244+(36-244)*g.rate/100];
+        const svg=document.querySelector('#view-b svg'),g=candidates().find(g=>g.reviews>0),w=+svg.getAttribute('width'),h=+svg.getAttribute('height');
+        return [54+Math.log10(g.reviews)/maxPower*(w-74),h-56+(92-h)*g.rate/100];
       });
       await page.mouse.move(b.x+point[0],b.y+point[1]);assert.ok(await page.locator('#tooltip').isVisible());assert.match(await page.locator('#tooltip').innerText(),/\$.*reviews/s);
     });
@@ -76,11 +105,11 @@ const root=path.resolve(__dirname,'..');
       await page.locator('#close-modal').click();await page.locator('#sort').selectOption('reviews');await page.locator('#reset').click();
     });
     await check('Real search and source tags refresh',async()=>{
-      await page.locator('#seed-search').fill('Hollow Knight');await page.locator('[data-seed="367520"]').click();
+      await editSearch();await page.locator('#seed-search').fill('Hollow Knight');await page.locator('[data-seed="367520"]').click();
       assert.match(await page.locator('#tags').innerText(),/Metroidvania/);assert.ok(await page.evaluate(()=>candidates().every(g=>g.id!=='367520')));
     });
     await check('Starting-game tag bank exposes all recorded tags and lets users swap a suggestion',async()=>{
-      await page.locator('#reset').click();await page.locator('[data-seed="248820"]').click();
+      await page.locator('#reset').click();await editSearch();await page.locator('[data-seed="248820"]').click();await editSearch();
       assert.equal(await page.locator('[data-seed-tag]').count(),20);
       assert.match(await page.locator('#tag-choice-count').innerText(),/Suggested tags · 3\/3/);
       assert.match(await readStatus(),/^206 candidates/);
@@ -101,7 +130,7 @@ const root=path.resolve(__dirname,'..');
       assert.match(await page.locator('[data-expand="b"]').innerText(),/^Expand\s*↗$/);
       await page.locator('[data-expand="b"]').click();
       const expanded=page.locator('#expanded-chart svg'), box=await expanded.boundingBox();
-      assert.ok(box.width>compact.width*1.8&&box.height>compact.height*1.5,JSON.stringify({compact,box}));
+      assert.ok(box.width>compact.width*1.8&&box.height>compact.height*1.4,JSON.stringify({compact,box}));
       assert.equal(await page.locator('#expanded-chart [data-review-mode="density"]').getAttribute('aria-pressed'),'true');
       const cell=await page.evaluate(()=>{
         const svg=document.querySelector('#expanded-chart svg');
@@ -144,7 +173,7 @@ const root=path.resolve(__dirname,'..');
     await check('Unverified prices are excluded under a dollar cap',async()=>{
       await page.locator('#reset').click();await page.locator('#relax').click();
       assert.ok(await page.evaluate(()=>candidates().every(g=>g.price!==null&&g.price<=1500)));
-      await page.locator('#budget').selectOption('any');assert.ok(await page.evaluate(()=>candidates().some(g=>g.price===null)));
+      await editSearch();await page.locator('#budget').selectOption('any');assert.ok(await page.evaluate(()=>candidates().some(g=>g.price===null)));
       assert.equal(await page.locator('#view-c [data-band="7"]').isEnabled(),true);await page.locator('#view-c [data-band="7"]').click();
       assert.match(await page.locator('#candidate-list tbody td:nth-child(3)').first().innerText(),/^Unverified$/);
     });

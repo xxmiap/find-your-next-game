@@ -1,6 +1,7 @@
 {
   "passed": [
     "Complete catalog, USD price caps, and three offline charts",
+    "Compact search keeps analysis visible and labels review-volume leaders",
     "Optional Platformer and shared-tag selection",
     "Clear, previous filters, and pinned baseline",
     "Dollar-band selection updates tag counts and list",
@@ -17,5 +18,5 @@
     "No runtime errors or automatic network calls"
   ],
   "errors": [],
-  "loadMs": 2418
+  "loadMs": 2406
 }

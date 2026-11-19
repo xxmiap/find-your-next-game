@@ -1,0 +1,79 @@
+Find Your Next Game - Final walkthrough
+Xiao Xiao | About five minutes, including clicks and pauses
+
+录制准备
+打开在线版，点 Reset，再回到页面顶部。录制前关闭通知。
+中文操作提示不用念。讲完最后一句，停一秒，停止录制。
+
+0:00-0:35 | Name, project and question
+【指标题和收起后的游戏摘要。】
+Hi, I'm Xiao Xiao, and my project is called Find Your Next Game.
+My question is: how can I find a Steam game that shares the features I
+enjoy, runs on my computer, and fits my budget?
+I'll follow one search. I liked Risk of Rain, I play on a Mac, and I have
+fifteen dollars to spend.
+
+0:35-1:15 | Starting game and data
+【点 Edit search，指游戏标签，保留 Rogue-like、Indie、Platformer。
+  点 Collapse setup。指快照日期和 57 candidates。】
+These are the recorded tags for my starting game. I can choose the
+features that matter to me. For this search, I'm keeping Rogue-like,
+Indie and Platformer.
+I collapse the setup so the three charts have more room. My game,
+tags, budget and platform stay visible here.
+The catalog contains 125,854 games from an August 2026 snapshot.
+Prices are recorded U.S. dollar prices. They may include discounts
+from that date. With these conditions, I have fifty-seven candidates.
+
+1:15-2:25 | Why these three charts
+【从左到右指 Shared tags、Reviews、Prices in USD。】
+I used an UpSet-style matrix because I want to show exactly which tags
+match. Each column is a tag, and each row is one exact combination.
+The bar shows how many games have that combination.
+
+The scatterplot compares positive review rate with review volume.
+Higher means a higher positive rate, and farther right means more
+reviews. Ninety percent from ten reviews carries different evidence
+from ninety percent from thousands. Position makes both values easy
+to compare, and the log axis accommodates a wide range of counts.
+The directly labeled names are the most-reviewed candidates.
+
+The price chart uses ordered dollar ranges and horizontal bars.
+All bars start at zero, so I can compare the number of games in each
+range. Empty ranges are hidden to give useful information more room.
+
+2:25-3:45 | Relax a condition and follow the same games
+【点 Make Platformer optional。指 57 before -> 581 now 和 +524 NEW。】
+Now I'll keep Rogue-like and Indie, but make Platformer optional.
+My results grow from fifty-seven to five hundred eighty-one.
+Five hundred twenty-four games have entered the search.
+Those NEW games are hollow diamonds. The original games are filled
+circles. NEW refers to the change in this search.
+
+【点左图 ● ● ○ 那一行的条形，避开复选框。指三个图和选中数量。】
+I'll click the two-tag row to look more closely at that new group.
+The same games are highlighted in the scatterplot and the price bars.
+Selected points keep their original shape and gain a stronger fill
+and outline. The direct labels now follow the selected group.
+The total is still five hundred eighty-one; five hundred twenty-four
+are selected. The table below shows the games in that selection.
+
+3:45-4:25 | Deal with overlap
+【在 Reviews 点 Density，悬停一个格子，然后点一个格子。】
+With hundreds of results, points overlap. Density groups the same
+games into cells. Darker cells contain more games.
+I can hover for the count, then click a cell to see those games across
+the other views and in the table. This gives me an overview before
+I inspect individual titles.
+
+4:25-5:00 | Finish with a decision
+【点表格里一个游戏名字，指高亮匹配标签和价格。保留详情窗结尾。】
+Here I can check the matching tags, the recorded price and the review
+evidence for one game. I can save it to my shortlist, compare it with
+another title, and open its Steam page to check the current offer.
+The dashboard is now hosted so other players can try the same search.
+That is the path I wanted to support: start with a familiar game,
+adjust one preference, and arrive at a few titles to investigate.
+Thank you.
+
+【停一秒，停止录制。】

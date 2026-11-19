@@ -8,12 +8,13 @@
 <main>
 <section id="sketch" class="page" aria-labelledby="hero-title">
   <section class="hero">
-    <div><p class="eyebrow">STEAM DISCOVERY · U.S. EDITION</p><h1 id="hero-title">Find your next game.</h1><p>Start with a game you like. See what matches your tags, platform, and budget.</p></div>
+    <div><h1 id="hero-title">Find your next game.</h1><p>Start with a game you like. See what matches your tags, platform, and budget.</p></div>
     <div class="snapshot"><strong id="catalog-count"></strong><span>games in the catalog</span><span id="catalog-price-count" class="note"></span><small id="snapshot-date"></small></div>
   </section>
   <section class="panel setup-panel" aria-label="Search settings">
-    <div class="panel-head"><div><p class="eyebrow">YOUR SEARCH</p><h2>Start with a game</h2></div><button id="toggle-setup" aria-expanded="true" aria-controls="setup">Collapse setup</button></div>
-    <div id="setup">
+    <div class="panel-head"><h2 id="search-heading">Start with a game</h2><button id="toggle-setup" aria-expanded="false" aria-controls="setup">Edit search</button></div>
+    <div id="search-summary" class="search-summary"></div>
+    <div id="setup" hidden>
       <div class="setup">
         <div class="field"><label for="seed-search">Search by game name</label><input id="seed-search" type="search" placeholder="Try Risk of Rain or Hollow Knight" autocomplete="off"><div id="seed-results" class="seed-results"></div></div>
         <div class="field"><span class="field-label">Search tags <small id="tag-choice-count"></small></span><div id="tags" class="tags"></div><details id="recorded-tags" class="recorded-tags" open hidden><summary id="recorded-tag-title"></summary><div id="recorded-tag-options" class="recorded-tag-options"></div><p id="recorded-tag-note" class="note" aria-live="polite"></p></details><div class="row tag-picker"><label class="sr-only" for="add-tag">Tag to add</label><select id="add-tag"></select><button id="add-tag-button">Add tag</button></div><p id="seed-note" class="note"></p></div>
