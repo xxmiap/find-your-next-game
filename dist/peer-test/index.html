@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Find Your Next Game · Peer test</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #183044;
+      background: #f4f5f2;
+      --muted: #425968;
+      --line: #c7d2d8;
+      --accent: #18577a;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.55; }
+    header { background: #163144; color: white; }
+    .wrap { max-width: 720px; margin: 0 auto; padding-inline: clamp(16px, 5vw, 28px); }
+    header .wrap { padding-block: 13px; font-weight: 750; }
+    main { padding-block: 28px 40px; }
+    h1, h2, p { margin: 0; }
+    h1 { font-size: clamp(1.75rem, 5.8vw, 2.35rem); line-height: 1.14; letter-spacing: -.035em; }
+    h2 { font-size: 1.1rem; margin-bottom: 5px; }
+    .lead, .send-note { margin-top: 10px; color: var(--muted); }
+    form { display: grid; gap: 14px; margin-top: 18px; }
+    .task { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+    .action {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #e8f0f5; color: var(--accent); border: 1px solid #b7c9d4;
+      text-decoration: none; border-radius: 7px; padding: 7px 12px; min-height: 42px;
+      font-weight: 680; font-size: .92rem; margin-block: 11px 4px; cursor: pointer;
+    }
+    .action:hover { background: #d9e9f1; }
+    .primary { background: var(--accent); color: white; border-color: var(--accent); margin: 0; font: inherit; font-weight: 700; }
+    .primary:hover { background: #114563; }
+    .task-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 12px; }
+    .field { display: grid; align-content: start; gap: 4px; min-width: 0; margin-top: 9px; font-weight: 650; }
+    .wide { grid-column: 1 / -1; }
+    input, select, textarea {
+      width: 100%; min-width: 0; min-height: 42px; padding: 7px 9px;
+      font: inherit; font-weight: 400; color: inherit;
+      background: #fff; border: 1px solid #a9bbc5; border-radius: 7px;
+    }
+    textarea { min-height: 76px; resize: vertical; }
+    .id-field { max-width: 210px; margin: 0; }
+    .send { border-top: 1px solid var(--line); padding-top: 16px; }
+    .send-note { font-size: .92rem; }
+    .copy-text { margin-top: 8px; min-height: 9rem; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    @media (max-width: 500px) { .task-fields { grid-template-columns: minmax(0, 1fr); } }
+  </style>
+</head>
+<body>
+  <header><div class="wrap">Find Your Next Game</div></header>
+  <main class="wrap">
+    <h1>Try three game search tasks</h1>
+    <p class="lead">Open each task’s dashboard, then come back here to jot down what happened. Honest feedback helps, including when you get stuck.</p>
+    <form id="feedback" autocomplete="off">
+      <label class="field id-field">Tester code
+        <input name="tester" placeholder="P1 or P2" maxlength="12">
+      </label>
+      <section class="task" aria-labelledby="task1">
+        <h2 id="task1">1. Look at one group</h2>
+        <p>You’re looking for a game like Risk of Rain. Keep the current search criteria. Focus on the games that have Rogue-like and Indie recorded and have no Platformer tag recorded. Look at this group’s reviews and prices, and find how many games are in the group.</p>
+        <a class="action" href="../index.html?peer=1" target="_blank" rel="noopener">Open dashboard for task 1</a>
+        <div class="task-fields">
+          <label class="field">What did you tap first?<input name="first" type="text"></label>
+          <label class="field">About how many seconds to find the group?<input name="seconds" type="number" min="0" step="1" inputmode="numeric" placeholder="Leave blank if you didn’t find it"></label>
+          <label class="field wide">How did it go?
+            <select name="result">
+              <option value="">Choose an answer</option>
+              <option>Found the group on my own</option>
+              <option>Found it with a hint</option>
+              <option>Couldn’t find the group</option>
+            </select>
+          </label>
+          <label class="field wide">What worked or got you stuck?
+            <textarea name="group" placeholder="If you found it, write what you tapped and how many games you saw."></textarea>
+          </label>
+        </div>
+      </section>
+      <section class="task" aria-labelledby="task2">
+        <h2 id="task2">2. Change a preference</h2>
+        <p>You’re still looking for a Rogue-like Indie game for macOS with a $15 budget. You’d also consider games without a recorded Platformer tag. Adjust the search to allow those games.</p>
+        <a class="action" href="../index.html?peer=2" target="_blank" rel="noopener">Open dashboard for task 2</a>
+        <label class="field">What changed, and what do you think NEW means?
+          <textarea name="preference" placeholder="If you got stuck, say where."></textarea>
+        </label>
+      </section>
+      <section class="task" aria-labelledby="task3">
+        <h2 id="task3">3. Decide what to try</h2>
+        <p>Compare Don’t Starve Together and Darkwood by recorded price, positive review percentage, and review count. Save the one you’d try first and find where you’d check its current Steam price.</p>
+        <a class="action" href="../index.html?peer=3" target="_blank" rel="noopener">Open dashboard for task 3</a>
+        <label class="field">Which did you choose, and why? Could you save it and find its Steam page?
+          <textarea name="choice"></textarea>
+        </label>
+      </section>
+      <label class="field">What was hardest to find? <small>Optional</small>
+        <textarea name="hardest"></textarea>
+      </label>
+      <div class="send">
+        <button class="action primary" id="copy" type="button">Copy feedback</button>
+        <p id="copy-status" class="send-note" role="status">Paste your copied feedback into the chat where you received this link.</p>
+        <textarea id="copy-text" class="copy-text" aria-label="Feedback ready to copy" readonly hidden></textarea>
+      </div>
+    </form>
+  </main>
+  <script>
+    const form = document.querySelector('#feedback');
+    const prompts = {
+      tester: 'Tester code',
+      first: 'Task 1 · First tap',
+      seconds: 'Task 1 · Seconds to find the group',
+      result: 'Task 1 · Result',
+      group: 'Task 1 · What worked or got me stuck',
+      preference: 'Task 2 · Search and NEW',
+      choice: 'Task 3 · Game choice and Steam link',
+      hardest: 'Hardest to find',
+    };
+    const tester = new URLSearchParams(location.search).get('tester');
+    const code = ['P1', 'P2'].includes(tester) ? tester : '';
+    const draftKey = 'fng-peer-test-feedback-v1:' + (code || 'default');
+
+    // A draft survives returning from the dashboard in the same browser.
+    try {
+      const draft = JSON.parse(sessionStorage.getItem(draftKey) || '{}');
+      for (const field of Object.keys(prompts)) form.elements[field].value = draft[field] ?? '';
+    } catch {}
+    if (code) form.elements.tester.value = code;
+    form.addEventListener('submit', event => event.preventDefault());
+    form.addEventListener('input', () => {
+      try { sessionStorage.setItem(draftKey, JSON.stringify(Object.fromEntries(new FormData(form)))); } catch {}
+      document.querySelector('#copy-text').hidden = true;
+      document.querySelector('#copy-status').textContent = 'Paste your copied feedback into the chat where you received this link.';
+    });
+
+    document.querySelector('#copy').addEventListener('click', async () => {
+      const answers = [...new FormData(form)].filter(([key, value]) => key !== 'tester' && value.trim());
+      const status = document.querySelector('#copy-status');
+      if (!answers.length) {
+        status.textContent = 'Add an observation before copying your feedback.';
+        return;
+      }
+      const fields = [['tester', form.elements.tester.value.trim() || 'Unspecified'], ...answers];
+      const feedback = ['Find Your Next Game — Peer feedback', ...fields.map(([key, value]) => `${prompts[key]}: ${value.trim()}`)].join('\n');
+      try {
+        await navigator.clipboard.writeText(feedback);
+        status.textContent = 'Copied. Paste it into your chat and send it.';
+      } catch {
+        const copyText = document.querySelector('#copy-text');
+        copyText.value = feedback;
+        copyText.hidden = false;
+        copyText.select();
+        status.textContent = 'Select and copy the feedback below, then paste it into your chat.';
+      }
+    });
+  </script>
+</body>
+</html>

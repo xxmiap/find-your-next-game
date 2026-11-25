@@ -463,3 +463,10 @@ document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{
 });
 let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(renderCharts,120)});
 reset();
+
+// Open each peer task in its starting state without demonstrating any controls.
+const peerTask=new URLSearchParams(location.search).get('peer');
+if(peerTask==='1'||peerTask==='3'){
+  $('relax').click();
+  if(peerTask==='3')setSelection(derived().patterns.get(3)||[]);
+}
