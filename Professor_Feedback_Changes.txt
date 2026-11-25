@@ -28,6 +28,12 @@ Professor feedback received after the working prototype
    Final_Walkthrough_EN.txt provides one scripted path and recording cues.
    Recording the replacement narration remains the student's next step.
 
+6. The Shared tags row action was easy to miss on a first visit.
+   Included rows with games now show a visible Highlight action. The nearby
+   instructions explain how Highlight focuses the linked views and how
+   checkboxes change which combinations are included. Keyboard focus stays
+   on the activated control when the charts redraw.
+
 Verified demo numbers for the pinned catalog are 57 -> 581, with 524 NEW.
 The professor's feedback quoted 57 -> 81. The recorded data and SQL
 reference checks support 581.

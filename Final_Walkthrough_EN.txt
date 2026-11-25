@@ -50,8 +50,8 @@ Five hundred twenty-four games have entered the search.
 Those NEW games are hollow diamonds. The original games are filled
 circles. NEW refers to the change in this search.
 
-【点左图 ● ● ○ 那一行的条形，避开复选框。指三个图和选中数量。】
-I'll click the two-tag row to look more closely at that new group.
+【点左图 ● ● ○ 那一行的 Highlight。指三个图和选中数量。】
+I'll click Highlight on the two-tag row to look more closely at that group.
 The same games are highlighted in the scatterplot and the price bars.
 Selected points keep their original shape and gain a stronger fill
 and outline. The direct labels now follow the selected group.

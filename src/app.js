@@ -145,15 +145,25 @@ function renderA(el){
   const {patterns}=derived();
   const masks=Array.from({length:(1<<state.tags.length)-1},(_,i)=>i+1).sort((a,b)=>bitCount(b)-bitCount(a)||b-a);
   const max=Math.max(1,...masks.map(m=>patterns.get(m)?.length??0));
-  el.innerHTML=state.tags.length?`<p class="chart-key">${state.tags.map((t,i)=>`<span><b>${i+1}</b> ${esc(t)}</span>`).join('')}</p><div class="matrix">${masks.map(m=>{
+  el.innerHTML=state.tags.length?`<p class="note matrix-help"><strong>Highlight</strong> shows a row’s games in Reviews, Prices, and the list. Check a box to include that combination.</p><p class="chart-key">${state.tags.map((t,i)=>`<span><b>${i+1}</b> ${esc(t)}</span>`).join('')}</p><div class="matrix">${masks.map(m=>{
     const gs=patterns.get(m)||[],n=gs.length,s=gs.filter(selected).length,on=state.rows.includes(m);
     const label=state.tags.map((t,i)=>(m&(1<<i)?'Has ':'No recorded ')+t).join('; ');
-    return `<div class="matrix-row"><input type="checkbox" data-row="${m}" ${on?'checked':''} aria-label="Include ${esc(label)}"><button class="matrix-btn" data-select-row="${m}" aria-label="Select ${esc(label)}" ${!on||!n?'disabled':''} data-tip="${esc(label)} · ${count(n)} games within budget and platform"><span class="matrix-label"><span class="pattern" aria-hidden="true">${state.tags.map((_,i)=>m&(1<<i)?'●':'○').join(' ')}</span><span>${numeric(n,s)}</span></span>${bars(n,s,max,on?'':'context')}</button></div>`;
+    const canHighlight=on&&n>0;
+    const action=canHighlight?'<span class="matrix-action" aria-hidden="true">Highlight</span>':'';
+    return `<div class="matrix-row"><input type="checkbox" data-row="${m}" ${on?'checked':''} aria-label="Include ${esc(label)}"><button class="matrix-btn" data-select-row="${m}" aria-label="Highlight games: ${esc(label)}" ${canHighlight?'':'disabled'} data-tip="${esc(label)} · ${count(n)} games within budget and platform"><span class="matrix-label"><span class="pattern" aria-hidden="true">${state.tags.map((_,i)=>m&(1<<i)?'●':'○').join(' ')}</span><span class="matrix-count">${numeric(n,s)}</span>${action}</span>${bars(n,s,max,on?'':'context')}</button></div>`;
   }).join('')}</div><div class="chart-scale"><span>0</span><span>Games</span><span>${count(max)}</span></div><p class="note">Each row is one exact combination. Counts use the current budget and platform.</p>`:'<p class="empty">Choose tags to see how games match.</p>';
-  el.querySelectorAll('[data-row]').forEach(n=>n.onchange=()=>changeFilter(()=>{
-    const mask=+n.dataset.row;state.rows=n.checked?[...state.rows,mask]:state.rows.filter(x=>x!==mask);
-  }));
-  el.querySelectorAll('[data-select-row]').forEach(n=>n.onclick=()=>setSelection(patterns.get(+n.dataset.selectRow)||[]));
+  el.querySelectorAll('[data-row]').forEach(checkbox=>checkbox.onchange=()=>{
+    const mask=Number(checkbox.dataset.row);
+    changeFilter(()=>{
+      state.rows=checkbox.checked?[...state.rows,mask]:state.rows.filter(row=>row!==mask);
+    });
+    el.querySelector(`[data-row="${mask}"]`)?.focus({preventScroll:true});
+  });
+  el.querySelectorAll('[data-select-row]').forEach(button=>button.onclick=()=>{
+    const mask=Number(button.dataset.selectRow);
+    setSelection(patterns.get(mask)||[]);
+    el.querySelector(`[data-select-row="${mask}"]`)?.focus({preventScroll:true});
+  });
   tips(el);
 }
 const bitCount=n=>n.toString(2).replaceAll('0','').length;

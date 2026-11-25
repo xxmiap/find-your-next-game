@@ -39,7 +39,7 @@ The online version is https://xxmiap.github.io/find-your-next-game/
 Setup starts collapsed. Edit search reveals the full game and tag picker.
 1. Reset to Risk of Rain (2013), Rogue-like + Indie + Platformer, macOS, $15.
 2. Show 57 candidates. Click Make Platformer optional: 581 total, +524 NEW.
-3. Click the Rogue-like + Indie row itself (not its checkbox). All three charts
+3. Click Highlight on the Rogue-like + Indie row. All three charts
    and the list reflect the same 524 highlighted records. The candidate set
    still contains 581 games. Hover a point for its USD price and reviews.
 4. Use Points / Density to compare the same candidates. Hover a density cell

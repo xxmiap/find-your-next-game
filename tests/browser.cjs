@@ -52,10 +52,19 @@ const root=path.resolve(__dirname,'..');
       await page.setViewportSize({width:1440,height:1370});
     });
     await check('Optional Platformer and shared-tag selection',async()=>{
+      const firstRow=page.locator('#view-a [data-select-row="7"]');
+      assert.match(await firstRow.innerText(),/Highlight/);
+      assert.match(await firstRow.getAttribute('aria-label'),/^Highlight games:/);
+      assert.ok(await page.locator('#view-a [data-select-row="3"]').isDisabled());
+      await firstRow.press('Enter');
+      assert.match(await readStatus(),/^57 candidates · 57 selected/);
+      assert.equal(await page.locator('#view-a [data-select-row="7"]:focus').count(),1);
       await page.locator('#relax').click();assert.match(await page.locator('#comparison').innerText(),/57 before → 581 now · \+524 NEW/);
+      assert.match(await page.locator('#view-a [data-select-row="3"]').innerText(),/Highlight/);
       await page.locator('#view-a [data-select-row="3"]').click();assert.match(await readStatus(),/^581 candidates · 524 selected/);
       assert.equal(await countIn('#list-count'),524);
       const selected=await page.locator('#view-c .selected-count').evaluateAll(ns=>ns.reduce((a,b)=>a+Number(b.textContent.replace(/,/g,'')),0));assert.equal(selected,524);
+      assert.match(await page.locator('#view-b .review-label-note').innerText(),/most-reviewed selected games/);
     });
     await check('Clear, previous filters, and pinned baseline',async()=>{
       await page.locator('#clear').click();assert.equal(await countIn('#list-count'),581);

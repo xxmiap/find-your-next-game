@@ -56,6 +56,19 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .summary-constraints { font-size: .87rem; color: var(--muted); }
 .charts { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1fr); }
 .matrix-btn { padding-block: 7px; }
+.matrix-help { margin: 0 0 8px; }
+.matrix-btn:enabled { background: #f3f7fa; border-color: #afc4d0; }
+.matrix-btn:enabled:hover { background: #e6eff4; border-color: var(--blue); }
+.matrix-btn:enabled:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.matrix-count { margin-left: auto; white-space: nowrap; }
+.matrix-action {
+  padding: 1px 6px;
+  border: 1px solid currentColor;
+  border-radius: 5px;
+  color: var(--blue-deep);
+  font-size: .75rem;
+  font-weight: 700;
+}
 .price-row { min-height: 36px; }
 
 /* Shape shows baseline membership. A ring and stronger fill show selection. */

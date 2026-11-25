@@ -15,7 +15,7 @@ The hosted version uses the same bundled catalog as the offline version.
 
 ## Try the demo
 
-Select **Reset**, then click **Make Platformer optional** to expand the default Risk of Rain search from 57 to 581 candidates. Click the **Rogue-like + Indie** row in **Shared tags** to see its 524 games highlighted in the linked reviews and price views.
+Select **Reset**, then click **Make Platformer optional** to expand the default Risk of Rain search from 57 to 581 candidates. In **Shared tags**, click **Highlight** on the **Rogue-like + Indie** row to focus on its 524 games across the charts and results list. The checkboxes add or remove tag combinations from the search.
 
 The search starts collapsed with the selected game, tags, budget and platform visible. Choose **Edit search** to change them. Selecting a game collapses setup automatically. Games without recorded tags keep setup open for manual tag selection.
 
