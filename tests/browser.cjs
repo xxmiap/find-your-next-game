@@ -219,6 +219,39 @@ const root=path.resolve(__dirname,'..');
       await page.setViewportSize({width:390,height:900});await page.locator('#tab-sketch').click();await page.evaluate(()=>scrollTo(0,0));
       await page.screenshot({path:path.join(root,'tests/output/us-mobile.png')});
     });
+    await check('Touch taps select review points and density cells',async()=>{
+      const phone=await browser.newPage({viewport:{width:390,height:900},isMobile:true,hasTouch:true});
+      try {
+        await phone.goto(pathToFileURL(path.join(root,'dist/index.html')).href);
+        const svg=phone.locator('#view-b svg');
+        const tapMark=async density=>{
+          await svg.scrollIntoViewIfNeeded();
+          const mark=await svg.evaluate((node,dense)=>{
+            const w=+node.getAttribute('width'),h=+node.getAttribute('height');
+            const x=d3.scaleLog().domain([1,10**maxPower]).range([54,w-20]);
+            const y=d3.scaleLinear().domain([0,100]).range([h-56,36]);
+            const plotted=candidates().filter(hasReviewRate);
+            if(dense){
+              const cell=d3.greatest(reviewGrid(plotted,x,y).cells,cell=>cell.games.length);
+              return {x:(cell.x0+cell.x1)/2,y:(cell.y0+cell.y1)/2,count:cell.games.length};
+            }
+            const game=d3.greatest(plotted,game=>game.reviews);
+            return {x:x(game.reviews),y:y(game.rate),name:game.name};
+          },density);
+          await svg.tap({position:{x:mark.x,y:mark.y}});
+          return mark;
+        };
+        const point=await tapMark(false);
+        assert.equal(await phone.locator('#modal-title').innerText(),point.name);
+        assert.match(await phone.locator('#status').innerText(),/57 candidates · 1 selected/);
+        await phone.locator('#close-modal').tap();
+        await phone.locator('#clear').tap();
+        await phone.locator('#view-b [data-review-mode="density"]').tap();
+        const cell=await tapMark(true);
+        assert.equal(await phone.locator('#list-count').innerText(),String(cell.count));
+        assert.match(await phone.locator('#status').innerText(),new RegExp(`57 candidates · ${cell.count} selected`));
+      }finally{await phone.close()}
+    });
     await check('No runtime errors or automatic network calls',async()=>{assert.deepEqual(errors,[]);assert.ok(requests.every(u=>u.startsWith('file:')))});
     fs.writeFileSync(path.join(root,'tests/output/results.json'),JSON.stringify({passed,errors,loadMs},null,2));
     console.log(`Verified ${passed.length} browser checks`);

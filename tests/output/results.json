@@ -15,8 +15,9 @@
     "Unverified prices are excluded under a dollar cap",
     "Expanded budget control updates the same filters",
     "Responsive layout and USD source documentation",
+    "Touch taps select review points and density cells",
     "No runtime errors or automatic network calls"
   ],
   "errors": [],
-  "loadMs": 498
+  "loadMs": 586
 }

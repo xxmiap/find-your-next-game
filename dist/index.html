@@ -590,7 +590,10 @@ function renderB(el) {
         const games=dense?grid.cells.filter(c=>c.x0<x1&&c.x1>x0&&c.y0<y1&&c.y1>y0).flatMap(c=>c.games):plotted.filter(g=>x(g.reviews)>=x0&&x(g.reviews)<=x1&&y(g.rate)>=y0&&y(g.rate)<=y1);
         setSelection(games,cellDomain(event.selection));
       }else{
-        const [px,py]=d3.pointer(event.sourceEvent,svg.node());
+        const source=event.sourceEvent;
+        if(source.type==='touchcancel')return;
+        // A touch ends with its position in changedTouches.
+        const [px,py]=d3.pointer(source.changedTouches?.[0]??source,svg.node());
         const hit=dense?grid.at(px,py):tree.find(px,py,11);
         if(!hit){clearSelection();render()}
         else if(dense)setSelection(hit.games);
