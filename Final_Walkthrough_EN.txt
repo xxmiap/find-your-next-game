@@ -21,15 +21,16 @@ features that matter to me. For this search, I'm keeping Rogue-like,
 Indie and Platformer.
 I collapse the setup so the three charts have more room. My game,
 tags, budget and platform stay visible here.
-The catalog contains 125,854 games from an August 2026 snapshot.
-Prices are recorded U.S. dollar prices. They may include discounts
-from that date. With these conditions, I have fifty-seven candidates.
+The catalog contains 125,854 games. The price snapshot is dated
+August 25, 2026. It shows recorded U.S. dollar prices, which may include
+discounts from that day. With these conditions, I have fifty-seven candidates.
 
 1:15-2:25 | Why these three charts
 【从左到右指 Shared tags、Reviews、Prices in USD。】
-I used an UpSet-style matrix because I want to show exactly which tags
-match. Each column is a tag, and each row is one exact combination.
-The bar shows how many games have that combination.
+I used an UpSet-style matrix to show exactly which tags match. Each row
+names a combination and shows which tags are present with filled dots.
+The bar shows how many games match. The Include checkbox sets which
+combinations are in the search. Highlight focuses one included group.
 
 The scatterplot compares positive review rate with review volume.
 Higher means a higher positive rate, and farther right means more
@@ -43,14 +44,14 @@ All bars start at zero, so I can compare the number of games in each
 range. Empty ranges are hidden to give useful information more room.
 
 2:25-3:45 | Relax a condition and follow the same games
-【点 Make Platformer optional。指 57 before -> 581 now 和 +524 NEW。】
+【点 Make Platformer optional。指 57 before -> 581 now 和 +524 newly included。】
 Now I'll keep Rogue-like and Indie, but make Platformer optional.
 My results grow from fifty-seven to five hundred eighty-one.
 Five hundred twenty-four games have entered the search.
-Those NEW games are hollow diamonds. The original games are filled
-circles. NEW refers to the change in this search.
+The hollow diamonds are the newly included games. They entered the
+search after I relaxed Platformer. The original games are filled circles.
 
-【点左图 ● ● ○ 那一行的 Highlight。指三个图和选中数量。】
+【点左图 Rogue-like + Indie 那一行的 Highlight。指三个图和选中数量。】
 I'll click Highlight on the two-tag row to look more closely at that group.
 The same games are highlighted in the scatterplot and the price bars.
 Selected points keep their original shape and gain a stronger fill
@@ -67,10 +68,10 @@ the other views and in the table. This gives me an overview before
 I inspect individual titles.
 
 4:25-5:00 | Finish with a decision
-【点表格里一个游戏名字，指高亮匹配标签和价格。保留详情窗结尾。】
+【指结果表里 Check Steam price，再点一个游戏名字，指高亮匹配标签和价格。保留详情窗结尾。】
 Here I can check the matching tags, the recorded price and the review
-evidence for one game. I can save it to my shortlist, compare it with
-another title, and open its Steam page to check the current offer.
+evidence for one game. I can save it to my shortlist and compare it with
+another title. The results list links directly to Steam for the current price.
 The dashboard is now hosted so other players can try the same search.
 That is the path I wanted to support: start with a familiar game,
 adjust one preference, and arrive at a few titles to investigate.

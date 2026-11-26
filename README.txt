@@ -38,7 +38,7 @@ HOW TO DEMO
 The online version is https://xxmiap.github.io/find-your-next-game/
 Setup starts collapsed. Edit search reveals the full game and tag picker.
 1. Reset to Risk of Rain (2013), Rogue-like + Indie + Platformer, macOS, $15.
-2. Show 57 candidates. Click Make Platformer optional: 581 total, +524 NEW.
+2. Show 57 candidates. Click Make Platformer optional: 581 total, 524 newly included.
 3. Click Highlight on the Rogue-like + Indie row. All three charts
    and the list reflect the same 524 highlighted records. The candidate set
    still contains 581 games. Hover a point for its USD price and reviews.
@@ -52,13 +52,13 @@ Setup starts collapsed. Edit search reveals the full game and tag picker.
 VISUAL ENCODINGS AND IMPLEMENTATION
 A: exact tag membership (fill) and game counts (common-scale bar length).
 B: positive rate (linear vertical position), review count (log horizontal
-position), NEW (hollow diamond), retained (filled circle), selection (blue
+position), newly included (hollow diamond), retained (filled circle), selection (blue
 fill, white halo, and dark outline, preserving the original shape). Direct
 labels identify up to three review-volume leaders in the active candidate
 or selected set. Density mode groups points
 into a fixed 20 × 10 grid; fill lightness encodes the number of games in each
 cell and an outline marks cells that contain selected games. Hover reports the
-cell totals, including NEW, and selecting a cell preserves the candidate set.
+cell totals, including newly included games, and selecting a cell preserves the candidate set.
 D3 provides scales and brush.
 C: ordered price bands in USD, horizontal bars for game counts and blue for
 selected counts. Empty bands are omitted and the number omitted is displayed.

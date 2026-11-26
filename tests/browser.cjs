@@ -21,6 +21,13 @@ const root=path.resolve(__dirname,'..');
       assert.match(await readStatus(),/^57 candidates/);assert.equal(await page.locator('#budget').inputValue(),'1500');
       assert.equal(await page.locator('.chart-card:visible').count(),3);
       assert.match(await page.locator('#candidate-list tbody td:nth-child(3)').first().innerText(),/^\$/);
+      assert.match(await page.locator('#snapshot-date').innerText(),/Price snapshot · Aug 25, 2026/);
+      assert.equal(await page.locator('#snapshot-date').getAttribute('datetime'),'2026-08-25');
+      assert.match(await page.locator('#list-price-note').innerText(),/recorded on Aug 25, 2026.*current offer/);
+      const firstResult=page.locator('#candidate-list tbody tr').first();
+      const steamLink=firstResult.getByRole('link',{name:/Check Steam price/});
+      const appId=await firstResult.locator('[data-details]').getAttribute('data-details');
+      assert.equal(await steamLink.getAttribute('href'),`https://store.steampowered.com/app/${appId}/?cc=us`);
       assert.ok(!/£|\bGBP\b/.test(await page.locator('body').innerText()));
     });
     await check('Compact search keeps analysis visible and labels review-volume leaders',async()=>{
@@ -54,15 +61,21 @@ const root=path.resolve(__dirname,'..');
     await check('Optional Platformer and shared-tag selection',async()=>{
       const firstRow=page.locator('#view-a [data-select-row="7"]');
       assert.match(await firstRow.innerText(),/Highlight/);
+      assert.equal(await firstRow.locator('.matrix-match').innerText(),'Rogue-like + Indie + Platformer');
       assert.match(await firstRow.getAttribute('aria-label'),/^Highlight games:/);
+      assert.match(await page.locator('#view-a [data-row="7"]').getAttribute('aria-label'),/^Include games:/);
       assert.ok(await page.locator('#view-a [data-select-row="3"]').isDisabled());
       await firstRow.press('Enter');
       assert.match(await readStatus(),/^57 candidates · 57 selected/);
       assert.equal(await page.locator('#view-a [data-select-row="7"]:focus').count(),1);
-      await page.locator('#relax').click();assert.match(await page.locator('#comparison').innerText(),/57 before → 581 now · \+524 NEW/);
-      assert.match(await page.locator('#view-a [data-select-row="3"]').innerText(),/Highlight/);
-      await page.locator('#view-a [data-select-row="3"]').click();assert.match(await readStatus(),/^581 candidates · 524 selected/);
+      await page.locator('#relax').click();assert.match(await page.locator('#comparison').innerText(),/57 before → 581 now · \+524 newly included/);
+      assert.match(await page.locator('#view-b .review-legend').innerText(),/Newly included vs\. baseline/);
+      const relaxedRow=page.locator('#view-a [data-select-row="3"]');
+      assert.match(await relaxedRow.innerText(),/Highlight/);
+      assert.equal(await relaxedRow.locator('.matrix-match').innerText(),'Rogue-like + Indie');
+      await relaxedRow.click();assert.match(await readStatus(),/^581 candidates · 524 selected/);
       assert.equal(await countIn('#list-count'),524);
+      assert.equal(await page.locator('#candidate-list tbody tr .new').first().innerText(),'Newly included');
       const selected=await page.locator('#view-c .selected-count').evaluateAll(ns=>ns.reduce((a,b)=>a+Number(b.textContent.replace(/,/g,'')),0));assert.equal(selected,524);
       assert.match(await page.locator('#view-b .review-label-note').innerText(),/most-reviewed selected games/);
     });
@@ -199,6 +212,9 @@ const root=path.resolve(__dirname,'..');
         await page.setViewportSize({width,height:900});
         for(const tab of ['sketch','channels','data']){await page.locator('#tab-'+tab).click();await page.waitForTimeout(150);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${width} ${tab}`)}
         assert.match(await page.locator('#data').innerText(),/Aug 25, 2026/);
+        await page.locator('#tab-sketch').click();
+        const matchWraps=await page.locator('#view-a .matrix-btn').evaluateAll(rows=>rows.every(row=>row.scrollWidth<=row.clientWidth));
+        assert.ok(matchWraps,`Shared tag row overflowed at ${width}px`);
       }
       await page.setViewportSize({width:390,height:900});await page.locator('#tab-sketch').click();await page.evaluate(()=>scrollTo(0,0));
       await page.screenshot({path:path.join(root,'tests/output/us-mobile.png')});
